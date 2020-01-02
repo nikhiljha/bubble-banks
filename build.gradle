@@ -1,0 +1,75 @@
+plugins {
+    id 'java'
+    id 'org.jetbrains.kotlin.jvm' version '1.3.21'
+    id 'com.github.johnrengelman.shadow' version '5.0.0'
+    id "ru.endlesscode.bukkitgradle" version "0.8.2"
+}
+
+group 'org.irvinebubble'
+version '0.1'
+
+sourceCompatibility = 1.8
+
+repositories {
+    spigot()
+    mavenCentral()
+}
+
+dependencies {
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8"
+    implementation 'com.google.code.gson:gson:2.8.5'
+    compileOnly paperApi()
+    testCompile group: 'junit', name: 'junit', version: '4.12'
+}
+
+compileKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+compileTestKotlin {
+    kotlinOptions.jvmTarget = "1.8"
+}
+
+// Override default configurations
+bukkit {
+    meta {
+        name = "Banks"
+        description = "Player loans and credit scores."
+        main = "org.irvinebubble.banks.BankPlugin"
+        version = "0.1"
+        url = "https://irvinebubble.org/" // Attribute website
+        authors = ["Nikhil Jha", "Audrey Xie"]
+    }
+    run {
+        // Core type. It can be 'spigot' or 'paper'
+        core = "spigot"
+        // Accept EULA
+        eula = true
+        // Set online-mode flag
+        onlineMode = true
+        // Debug mode (listen 5005 port, if you use running from IDEA this option will be ignored)
+        debug = true
+        // Set server encoding (flag -Dfile.encoding)
+        encoding = "UTF-8"
+        // JVM arguments
+        javaArgs = "-Xmx1G"
+        // Bukkit arguments
+        bukkitArgs = ""
+    }
+}
+
+shadowJar {
+    // Enable shadowJar minimization to reduce plugin size.
+    // Read more: https://imperceptiblethoughts.com/shadow/configuration/minimizing/
+    minimize()
+
+    // To avoid possible conflicts we should relocate embedded dependencies to own unique package
+    // Here we use manual relocating, but easiest (and slower) variant is use automatically relocating.
+    // Read more: https://imperceptiblethoughts.com/shadow/configuration/relocation/#automatically-relocating-dependencies
+    def shadowPackage = "shadow.org.irvinebubble.banks.AuthPlugin"
+    relocate "org.jetbrains.annotations", "${shadowPackage}.annotations"
+    relocate "kotlinx", "${shadowPackage}.kotlinx"
+    relocate "kotlin", "${shadowPackage}.kotlin"
+}
+
+// Automatically run shadowJar making on assemble
+tasks.assemble.dependsOn tasks.shadowJar
