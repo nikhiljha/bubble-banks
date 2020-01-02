@@ -37,7 +37,7 @@ bukkit {
         main = "org.irvinebubble.banks.BankPlugin"
         version = "0.1"
         url = "https://irvinebubble.org/" // Attribute website
-        authors = ["Nikhil Jha", "Audrey Xie"]
+        authors = ["Nikhil Jha"]
     }
     run {
         // Core type. It can be 'spigot' or 'paper'

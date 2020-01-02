@@ -1,0 +1,4 @@
+commands:
+  bank:
+    description: Main command, also prints help.
+    usage: /bank
